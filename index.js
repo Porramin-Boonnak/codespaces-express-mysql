@@ -56,7 +56,48 @@ app.get('/api/products/:id', function (req, res) {
     });
 });
 
-const port = 5000;
+app.post('/api/products', function (req, res) {
+    const name = req.body.name;
+    const price = req.body.price;
+    const img = req.body.img;
+    con.query(`insert into products (name,price,img) values('${name}','${price}','${img}')`, function (err,result,fields) {
+        if (err) throw res.status(400).send('Not cannot add products');
+        con.query("SELECT * FROM products", function (err,result,fields) {
+            if (err) throw res.status(400).send('Not found any products');
+            console.log(result);
+            res.send(result);
+        });
+    });
+});
+
+app.delete('/api/products/:id', function (req, res) {
+    const id = req.params.id;
+    con.query(`delete FROM products where id=${id}`, function (err,result,fields){
+        if (err) throw res.status(400).send('Not cannot delete products');
+        con.query("SELECT * FROM products", function (err,result,fields) {
+            if (err) throw res.status(400).send('Not found any products');
+            console.log(result);
+            res.send(result);
+        });
+    });
+});
+
+app.put('/api/products/:id', function (req, res) {
+    const id = req.params.id;
+    const name = req.body.name;
+    const price = req.body.price;
+    const img = req.body.img;
+    con.query(`update products SET name='${name}',price='${price}',img='${img}' where id=${id}`, function (err,result,fields){
+        if (err) throw res.status(400).send('Not cannot delete products');
+        con.query("SELECT * FROM products", function (err,result,fields) {
+            if (err) throw res.status(400).send('Not found any products');
+            console.log(result);
+            res.send(result);
+        });
+    });
+});
+
+const port = 5001;
 app.listen(port, function () {
     console.log("Listening on port", port);
 });
